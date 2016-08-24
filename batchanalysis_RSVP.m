@@ -174,7 +174,8 @@ targ_scores(:,2) = target_accuracy2;
 targ_scores(:,3) = target_accuracy3;
 targ_scores(:,4) = target_accuracy4;
 targ_scores
-target_accuracy_mean = (mean(mean(targ_scores))/2)
+target_accuracy_mean = mean(mean(targ_scores))
+half_mean = target_accuracy_mean/2;
 
 for i = 1:108
     if targ_scores(i) >= target_accuracy_mean
@@ -184,6 +185,11 @@ for i = 1:108
         top_targs(i) = 0;
         bottom_targs(i) = 1;
     end
+    if targ_scores(i) >= half_mean
+        very_bottom_targs(i) = 0;
+    else
+        very_bottom_targs(i) = 1;
+    end
 end
 cd ..
 cd Stimuli
@@ -191,20 +197,27 @@ targets = xlsread('targets2.xls');
 
 targets = reshape(targets,1,108);
 
-see_good_targs = 0;
+which_targs = 3;bhddddd %1 = top_targs, 2 = bottom_targs, 3 = very_bottom_targs
 
-if see_good_targs == 1
+if which_targs == 1
     for i = 1:108
         if top_targs(i) == 1
             top_targs(i) = targets(i);
         end
     end
     top_targs = reshape(top_targs,27,4)
-else
+elseif which_targs == 2
     for i = 1:108
         if bottom_targs(i) == 1
             bottom_targs(i) = targets(i);
         end
     end
     bottom_targs = reshape(bottom_targs,27,4)
+else
+    for i = 1:108
+        if very_bottom_targs(i) == 1
+            very_bottom_targs(i) = targets(i);
+        end
+    end
+    very_bottom_targs = reshape(very_bottom_targs,27,4)
 end
